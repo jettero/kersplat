@@ -1,0 +1,19 @@
+
+############# test requirements ####################
+#
+argparse
+Crypto
+daemon
+logging
+pprint
+pyinotify
+pyopenssl>=16.2.0
+pytest
+pyyaml
+requests>=2.13.0
+salt-ssh
+
+############# lint requirements ####################
+#
+pylint
+saltpylint
