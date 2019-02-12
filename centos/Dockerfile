@@ -2,10 +2,6 @@ FROM centos:latest
 WORKDIR /root
 ENV HOME=/root
 
-ENV PY_V=2.7.14
-ENV PY_B=$HOME/.pyenv/versions/$PY_V/bin
-ENV PY=$PY_B/python PIP=$PY_B/pip
-
 RUN yum -y install \
         git wget vim python-setuptools net-tools iproute strace \
         gcc make zlib-devel bzip2 bzip2-devel readline-devel sqlite \
@@ -17,9 +13,17 @@ RUN yum -y install \
     yum clean all ; rm -rf /var/cache/yum; \
     rm anaconda*
 
-COPY requirements.txt requirements.txt
+ENV PY_V=2.7.14
+ENV PY_E=/usr/local/pyenv
+ENV PY_B=$PY_E/versions/$PY_V/bin
+ENV PY=$PY_B/python PIP=$PY_B/pip
+
 RUN curl https://pyenv.run | bash
-RUN eval "$(/root/.pyenv/bin/pyenv init -)"; /root/.pyenv/bin/pyenv install $PY_V
+RUN mv /root/.pyenv /usr/local/pyenv
+RUN eval "$(/usr/local/pyenv init -)"; /usr/local/pyenv/bin/pyenv install $PY_V
+RUN find $PY_E -type d -print0 | xargs -r0 chmod -c o=g
+
+COPY requirements.txt requirements.txt
 RUN $PIP install --upgrade pip urllib3 requests; rm -rf ~/.cache/pip
 RUN $PIP install --upgrade -r requirements.txt;  rm -rf ~/.cache/pip requirements.txt
 ENV http_proxy= https_proxy=
