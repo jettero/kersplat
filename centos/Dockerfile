@@ -24,6 +24,7 @@ RUN $PIP install --upgrade -r requirements.txt;  rm -rf ~/.cache/pip
 RUN mkdir -vp /hubble /hubblestack_data
 
 ENV http_proxy= https_proxy=
+COPY bashrc /root/.bashrc
 
 COPY docker-entrypoint.sh /
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
