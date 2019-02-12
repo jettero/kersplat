@@ -1,5 +1,11 @@
 #!/bin/bash
 
+cat > /usr/bin/get-hubble << EOF
+git clone https://github.com/hubblestack/hubble -o github /hubble
+git clone https://github.com/hubblestack/hubblestack_data -o github /hubblestack_data
+EOF
+chmod 0755 /usr/bin/get-hubble
+
 cat > /root/.bashrc << EOF 
 export PATH="\$HOME/.pyenv/bin:\$PATH"
 eval "\$(pyenv init -)"
@@ -11,12 +17,6 @@ EOF
 source /root/.bashrc
 pyenv local $PY_V
 pyenv shell $PY_V
-
-cat > /usr/bin/get-hubble << EOF
-git clone https://github.com/hubblestack/hubble -o github /hubble
-git clone https://github.com/hubblestack/hubblestack_data -o github /hubblestack_data
-EOF
-chmod 0755 /usr/bin/get-hubble
 
 echo "entrypoint finished. issuing CMD: $*"
 "$@"
