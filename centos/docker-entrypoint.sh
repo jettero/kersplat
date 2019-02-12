@@ -12,7 +12,7 @@ eval "\$(pyenv init -)"
 PS1='hubble-docker \\w\\$ '
 alias ls='ls -h --color=tty'
 alias l='ls -sh'
-cd /hubble || (get-hubble; cd /hubble)
+cd /hubble
 EOF
 source /root/.bashrc
 pyenv local $PY_V
