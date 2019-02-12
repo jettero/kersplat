@@ -47,7 +47,7 @@ function dbuild() {
     echo -n $'\e[m'
 
     ${JUST_ECHO:+echo} \
-        docker image build -t "$IMAGE_NAME" build-dir || exit 1
+        docker image build -t "$IMAGE_NAME" "$BUILD_DIR"|| exit 1
 }
 
 function drun() {
