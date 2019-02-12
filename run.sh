@@ -2,8 +2,10 @@
 
 source "$(dirname "$0")"/include.sh
 
-volume[../../adobe/hubble]=/hubble
-volume[../../adobe/hubblestack_data]=/hubblestack_data
+if [ -z "$NO_VOL" ]; then
+    volume[../../adobe/hubble]=/hubble
+    volume[../../adobe/hubblestack_data]=/hubblestack_data
+fi
 
 dbuild
 drun "$@"
