@@ -1,6 +1,7 @@
 #!/bin/bash
 
-source /root/.bashrc
+echo "/docker-entrypoint.sh"
 
-echo "entrypoint finished. issuing CMD: $*"
+source /etc/profile.d/kersplat.sh
+
 "$@"

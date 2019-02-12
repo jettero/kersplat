@@ -22,16 +22,17 @@ RUN umask 022
 RUN curl -s -S -L "$PYENV_INSTALLER_URL" -o /usr/bin/pyenv-installer; chmod 0755 /usr/bin/pyenv-installer
 RUN /usr/bin/pyenv-installer
 RUN eval "$(pyenv init -)"; pyenv install $PY_V
-RUN pyenv local $PY_V
-RUN pyenv shell $PY_V
 
+COPY kersplat.sh /etc/profile.d/kersplat.sh
 COPY requirements.txt requirements.txt
-RUN pip install --upgrade pip urllib3 requests; rm -rf ~/.cache/pip
-RUN pip install --upgrade -r requirements.txt;  rm -rf ~/.cache/pip requirements.txt
+RUN source /etc/profile.d/kersplat.sh; \
+     pip install --upgrade pip urllib3 requests; \
+     pip install --upgrade -r requirements.txt; \
+     rm -rf ~/.cache/pip requirements.txt
 
 ENV http_proxy= https_proxy=
 
-COPY bashrc /root/.bashrc
+copy bashrc /root/.bashrc
 COPY docker-entrypoint.sh /
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
 CMD [ "bash", "-o", "vi" ]
