@@ -14,18 +14,18 @@ RUN yum -y install \
     wget https://pkg.osquery.io/rpm/osquery-3.3.0-1.linux.x86_64.rpm; \
     rpm -i osquery-3.3.0-1.linux.x86_64.rpm; \
     rm     osquery-3.3.0-1.linux.x86_64.rpm; \
-    yum clean all ; rm -rf /var/cache/yum
+    yum clean all ; rm -rf /var/cache/yum; \
+    rm anaconda*
 
 COPY requirements.txt requirements.txt
 RUN curl https://pyenv.run | bash
 RUN eval "$(/root/.pyenv/bin/pyenv init -)"; /root/.pyenv/bin/pyenv install $PY_V
 RUN $PIP install --upgrade pip urllib3 requests; rm -rf ~/.cache/pip
-RUN $PIP install --upgrade -r requirements.txt;  rm -rf ~/.cache/pip
+RUN $PIP install --upgrade -r requirements.txt;  rm -rf ~/.cache/pip requirements.txt
+ENV http_proxy= https_proxy=
 RUN mkdir -vp /hubble /hubblestack_data
 
-ENV http_proxy= https_proxy=
 COPY bashrc /root/.bashrc
-
 COPY docker-entrypoint.sh /
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
 CMD [ "bash", "-o", "vi" ]
