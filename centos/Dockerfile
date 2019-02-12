@@ -2,8 +2,6 @@ FROM centos:latest
 WORKDIR /root
 ENV HOME=/root
 
-#ENV http_proxy=http://PROXY_IP:PROXY_PORT/
-#ENV https_proxy=http://PROXY_IP:PROXY_PORT/
 ENV PY_V=2.7.14
 ENV PY_B=$HOME/.pyenv/versions/$PY_V/bin
 ENV PY=$PY_B/python PIP=$PY_B/pip

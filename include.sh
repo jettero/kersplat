@@ -31,23 +31,14 @@ function dprune() {
 }
 
 function dbuild() {
-    BUILD_DIR="$(dirname "$OS_DIR")/.bd"
-    rsync -a --delete "$OS_DIR/" "$BUILD_DIR"
-    sed -i -e "s/^FROM .*/FROM $OS:$OSV/" "$BUILD_DIR/Dockerfile"
+    cmd=( docker image build -t "$IMAGE_NAME" )
 
     if [ -n "$build_proxy" ]; then
-        sed -i \
-            -e 's/^#.*\(ENV.*PROXY.*\)/\1/' \
-            -e "s/PROXY_IP:PROXY_PORT/$build_proxy/" \
-            "$BUILD_DIR/Dockerfile"
+        cmd+=( --build-arg "http_proxy=http://$build_proxy/" )
+        cmd+=( --build-arg "https_proxy=http://$build_proxy/" )
     fi
 
-    echo -n $'\e[1;30m'
-    diff -u "$OS_DIR/Dockerfile" "$BUILD_DIR/Dockerfile"
-    echo -n $'\e[m'
-
-    ${JUST_ECHO:+echo} \
-        docker image build -t "$IMAGE_NAME" "$BUILD_DIR"|| exit 1
+    ${JUST_ECHO:+echo} "${cmd[@]}" "$OS_DIR" || exit 1
 }
 
 function drun() {
