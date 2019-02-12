@@ -34,6 +34,9 @@ function dbuild() {
     cmd=( docker image build -t "$IMAGE_NAME" )
 
     if [ -n "$build_proxy" ]; then
+        # NOTE: for custom ENV names, you have to define an ARG in the
+        # Dockerfile; but several default ARGs exist that automatically map to
+        # ENV. https://docs.docker.com/engine/reference/builder/#predefined-args
         cmd+=( --build-arg "http_proxy=http://$build_proxy/" )
         cmd+=( --build-arg "https_proxy=http://$build_proxy/" )
     fi
