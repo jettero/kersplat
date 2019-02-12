@@ -14,20 +14,22 @@ RUN yum -y install \
     rm anaconda*
 
 ENV PY_V=2.7.14
-ENV PY_E=/usr/local/pyenv
-ENV PY_B=$PY_E/versions/$PY_V/bin
-ENV PY=$PY_B/python PIP=$PY_B/pip
+ENV PYENV_INSTALLER_URL=https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer
+ENV PYENV_ROOT=/usr/local/pyenv
+ENV PATH=$PYENV_ROOT/bin:$PATH
 
-RUN curl https://pyenv.run | bash
-RUN mv /root/.pyenv /usr/local/pyenv
-RUN eval "$(/usr/local/pyenv init -)"; /usr/local/pyenv/bin/pyenv install $PY_V
-RUN find $PY_E -type d -print0 | xargs -r0 chmod -c o=g
+RUN umask 022
+RUN curl -s -S -L "$PYENV_INSTALLER_URL" -o /usr/bin/pyenv-installer; chmod 0755 /usr/bin/pyenv-installer
+RUN /usr/bin/pyenv-installer
+RUN eval "$(pyenv init -)"; pyenv install $PY_V
+RUN pyenv local $PY_V
+RUN pyenv shell $PY_V
 
 COPY requirements.txt requirements.txt
-RUN $PIP install --upgrade pip urllib3 requests; rm -rf ~/.cache/pip
-RUN $PIP install --upgrade -r requirements.txt;  rm -rf ~/.cache/pip requirements.txt
+RUN pip install --upgrade pip urllib3 requests; rm -rf ~/.cache/pip
+RUN pip install --upgrade -r requirements.txt;  rm -rf ~/.cache/pip requirements.txt
+
 ENV http_proxy= https_proxy=
-RUN mkdir -vp /hubble /hubblestack_data
 
 COPY bashrc /root/.bashrc
 COPY docker-entrypoint.sh /
