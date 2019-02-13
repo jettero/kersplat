@@ -32,8 +32,6 @@ RUN source /etc/profile.d/kersplat.sh; \
      pip install pip-tools ipython; \
      rm -rf ~/.cache/pip requirements.txt
 
-ENV http_proxy= https_proxy=
-
 copy bashrc /root/.bashrc
 COPY docker-entrypoint.sh /
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
