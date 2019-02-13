@@ -38,13 +38,14 @@ function dprune() {
 }
 
 function dbuild() {
-    cmd=( docker image build -t "$IMAGE_NAME" )
-
     if [ -n "$1" ]; then
         NOW="$(git symbolic-ref --short HEAD)"
         git co "$1" || exit 1
+        source "$(dirname "$0")"/vars.sh
     else unset NOW
     fi
+
+    cmd=( docker image build -t "$IMAGE_NAME" )
 
     if [ -n "$build_proxy" ]; then
         # NOTE: for custom ENV names, you have to define an ARG in the
