@@ -22,12 +22,14 @@ RUN umask 022
 RUN curl -s -S -L "$PYENV_INSTALLER_URL" -o /usr/bin/pyenv-installer; chmod 0755 /usr/bin/pyenv-installer
 RUN /usr/bin/pyenv-installer
 RUN eval "$(pyenv init -)"; pyenv install $PY_V
+RUN eval "$(pyenv init -)"; pyenv local 2.7.14; pyenv shell 2.7.14
 
 COPY kersplat.sh /etc/profile.d/kersplat.sh
 COPY requirements.txt requirements.txt
 RUN source /etc/profile.d/kersplat.sh; \
      pip install --upgrade pip urllib3 requests; \
      pip install --upgrade -r requirements.txt; \
+     pip install pip-tools ipython; \
      rm -rf ~/.cache/pip requirements.txt
 
 ENV http_proxy= https_proxy=

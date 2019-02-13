@@ -1,5 +1,5 @@
 #!/bin/bash
 
-echo "kersplat .bashrc"
+# echo "kersplat .bashrc"
 
 source /etc/profile.d/kersplat.sh
