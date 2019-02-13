@@ -32,9 +32,15 @@ RUN source /etc/profile.d/kersplat.sh; \
      pip install pip-tools ipython; \
      rm -rf ~/.cache/pip requirements.txt
 
-RUN chown 1000:1000 -R $PYENV_ROOT
-
 copy bashrc /root/.bashrc
 COPY docker-entrypoint.sh /
+
+RUN chown 1000:1000 -R $PYENV_ROOT; \
+    chmod 0755 /docker-entrypoint.sh; \
+    chmod 0644 /etc/profile.d/kersplat.sh; \
+    mkdir /work; chmod 1777 /work
+
+WORKDIR /work
+
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
 CMD [ "bash", "-o", "vi" ]

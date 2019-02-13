@@ -71,6 +71,10 @@ function drun() {
           VA+=( --mount "type=bind,source=$(realpath "$v"),destination=$( realpath "${volume[$v]}" )" )
       done
 
+      if [ -n "$AS_USER" ]
+      then VA+=( --user "$AS_USER" )
+      fi
+
       ${JUST_ECHO:+echo} \
           docker run "${VA[@]}" -ti --rm --name "$CONTAINER_NAME" "$IMAGE_NAME" "$@"
     )
