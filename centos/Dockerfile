@@ -32,17 +32,20 @@ RUN source /etc/profile.d/kersplat.sh; \
      pip install pip-tools ipython; \
      rm -rf ~/.cache/pip requirements.txt
 
+RUN groupadd -fg 1000 kersplat; \
+    useradd -os /bin/bash -d /work -m -g 1000 -u 1000 kersplat
+
 copy bashrc /root/.bashrc
 copy bashrc /work/.bashrc
 COPY docker-entrypoint.sh /
 
-RUN groupadd -fg 1000 kersplat; \
-    useradd -os /bin/bash -d /work -m -g 1000 -u 1000 kersplat; \
-    chown kersplat:kersplat -R $PYENV_ROOT /work; \
+RUN chown kersplat:kersplat -R $PYENV_ROOT /work; \
     chmod 0755 /docker-entrypoint.sh; \
     chmod 0644 /etc/profile.d/kersplat.sh
 
 WORKDIR /work
+ENV HOME=/work
+USER kersplat
 
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
 CMD [ "bash", "-o", "vi" ]
