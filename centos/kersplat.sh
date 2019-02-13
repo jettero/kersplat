@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# echo "kersplat.sh"
+set +x
 
 export PATH="$PYENV_ROOT/bin:$PATH"
-PS1="kersplat[$PY_V] \w\$ "
+PS1="\u[$PY_V] \w\$ "
 
 alias ls='ls -h --color=tty'
 alias l='ls -sh'

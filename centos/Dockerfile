@@ -33,12 +33,14 @@ RUN source /etc/profile.d/kersplat.sh; \
      rm -rf ~/.cache/pip requirements.txt
 
 copy bashrc /root/.bashrc
+copy bashrc /work/.bashrc
 COPY docker-entrypoint.sh /
 
-RUN chown 1000:1000 -R $PYENV_ROOT; \
+RUN groupadd -fg 1000 kersplat; \
+    useradd -os /bin/bash -d /work -m -g 1000 -u 1000 kersplat; \
+    chown kersplat:kersplat -R $PYENV_ROOT /work; \
     chmod 0755 /docker-entrypoint.sh; \
-    chmod 0644 /etc/profile.d/kersplat.sh; \
-    mkdir /work; chmod 1777 /work
+    chmod 0644 /etc/profile.d/kersplat.sh
 
 WORKDIR /work
 
