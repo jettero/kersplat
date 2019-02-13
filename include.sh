@@ -18,8 +18,11 @@ rst=$'\e[m'
 var_color=$'\e[1;35m'
 val_color=$'\e[35m'
 
-function dprune() {
+function dcprune() {
     docker container prune < <(yes)
+}
+
+function diprune() {
     docker image ls | grep "^$DHUB_REPO" \
         | awk '{print $2}' \
         | grep -v "^$IMAGE_TAG" \
@@ -27,7 +30,11 @@ function dprune() {
         | sort -u \
         | xargs -rn1 -I{} docker rmi "$DHUB_REPO:{}"
     docker image prune < <(yes)
-    echo
+}
+
+function dprune() {
+    dcprune
+    diprune
 }
 
 function dbuild() {

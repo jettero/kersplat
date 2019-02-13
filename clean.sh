@@ -2,4 +2,5 @@
 
 source "$(dirname "$0")"/include.sh
 
-dprune
+dcprune
+diprune

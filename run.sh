@@ -9,4 +9,4 @@ fi
 
 dbuild
 drun "$@"
-dprune
+dcprune
