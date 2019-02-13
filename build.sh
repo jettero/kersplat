@@ -2,4 +2,4 @@
 
 source "$(dirname "$0")"/include.sh
 
-dbuild
+dbuild "$@"

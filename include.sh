@@ -40,6 +40,12 @@ function dprune() {
 function dbuild() {
     cmd=( docker image build -t "$IMAGE_NAME" )
 
+    if [ -n "$1" ]; then
+        NOW="$(git symbolic-ref --short HEAD)"
+        git co "$1" || exit 1
+    else unset NOW
+    fi
+
     if [ -n "$build_proxy" ]; then
         # NOTE: for custom ENV names, you have to define an ARG in the
         # Dockerfile; but several default ARGs exist that automatically map to
@@ -49,6 +55,10 @@ function dbuild() {
     fi
 
     ${JUST_ECHO:+echo} "${cmd[@]}" "$OS_DIR" || exit 1
+
+    if [ -n "$NOW" ]
+    then git co "$NOW"
+    fi
 }
 
 function drun() {
