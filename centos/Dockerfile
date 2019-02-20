@@ -3,16 +3,15 @@ FROM $OSI
 WORKDIR /root
 ENV HOME=/root
 
-RUN yum -y install \
-        git wget vim python-setuptools net-tools iproute strace \
-        gcc make zlib-devel bzip2 bzip2-devel readline-devel sqlite \
-        sqlite-devel openssl-devel xz xz-devel libffi-devel \
-        ; \
-    wget https://pkg.osquery.io/rpm/osquery-3.3.0-1.linux.x86_64.rpm; \
-    rpm -i osquery-3.3.0-1.linux.x86_64.rpm; \
-    rm     osquery-3.3.0-1.linux.x86_64.rpm; \
-    yum clean all ; rm -rf /var/cache/yum; \
-    rm anaconda*
+RUN yum makecache fast && yum -y update \
+ && yum -y install \
+      git wget vim python-setuptools net-tools iproute strace \
+      gcc make zlib-devel bzip2 bzip2-devel readline-devel sqlite \
+      sqlite-devel openssl-devel xz xz-devel libffi-devel \
+ && wget https://pkg.osquery.io/rpm/osquery-3.3.0-1.linux.x86_64.rpm \
+ && rpm -i osquery-3.3.0-1.linux.x86_64.rpm \
+ && yum clean all \
+ && rm -rf /var/cache/yum anaconda* osquery*.rpm
 
 ENV PY_V=2.7.14
 ENV PYENV_INSTALLER_URL=https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer

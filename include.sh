@@ -62,7 +62,6 @@ function dbuild {
 
 function drun {
     ( set | grep ^HUBBLE_
-      set -x
 
       VA=( )
       for v in "${!volume[@]}"; do
@@ -74,9 +73,13 @@ function drun {
       fi
 
       cmd=( docker run "${VA[@]}" -ti --rm --name "$CONTAINER_NAME" "$IMAGE_NAME" "$@" )
-      if [ -n "$JUST_ECHO" ]
-      then ifold <<< "${cmd[*]}"; exit 1
-      else "${cmd[@]}" || exit 1
+
+      echo
+      ifold <<< "${cmd[*]}"
+      echo
+
+      if [ -z "$JUST_ECHO" ]
+      then "${cmd[@]}" || exit 1
       fi
     )
 
