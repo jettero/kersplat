@@ -1,28 +1,23 @@
 #!/bin/bash
 
 source "$(dirname "$0")"/vars.sh
-
-if [ -n "$TOP_DIR" -a -d "$TOP_DIR" ]
-then cd "$TOP_DIR" || exit 1
-else "Something is wrong with the vars.sh file"
-fi
-
+source "$(dirname "$0")"/func.sh
 declare -A volume
 
-if [ ! -f "$OS_DIR/Dockerfile" ]; then
-    echo "then make a $OS/Dockerfile"
-    exit 1
+if [ ! -f "$OS_DIR/Dockerfile" ]
+then echo "no such file $OS_DIR/Dockerfile"; exit 1
 fi
 
-rst=$'\e[m'
-var_color=$'\e[1;35m'
-val_color=$'\e[35m'
+if [ -n "$TOP_DIR" -a -d "$TOP_DIR" ]
+then cd "$TOP_DIR"
+else "can't cd into $TOP_DIR"; exit 1
+fi
 
-function dcprune() {
+function dcprune {
     docker container prune < <(yes)
 }
 
-function diprune() {
+function diprune {
     docker image ls | grep "^$DHUB_REPO" \
         | awk '{print $2}' \
         | grep -v "^$IMAGE_TAG" \
@@ -32,12 +27,12 @@ function diprune() {
     docker image prune < <(yes)
 }
 
-function dprune() {
+function dprune {
     dcprune
     diprune
 }
 
-function dbuild() {
+function dbuild {
     if [ -n "$1" ]; then
         NOW="$(git symbolic-ref --short HEAD)"
         git co "$1" || exit 1
@@ -45,7 +40,7 @@ function dbuild() {
     else unset NOW
     fi
 
-    cmd=( docker image build -t "$IMAGE_NAME" )
+    cmd=( docker image build -t "$IMAGE_NAME" --build-arg "OSI=$OSI" )
 
     if [ -n "$build_proxy" ]; then
         # NOTE: for custom ENV names, you have to define an ARG in the
@@ -55,14 +50,17 @@ function dbuild() {
         cmd+=( --build-arg "https_proxy=http://$build_proxy/" )
     fi
 
-    ${JUST_ECHO:+echo} "${cmd[@]}" "$OS_DIR" || exit 1
+    if [ -n "$JUST_ECHO" ]
+    then ifold <<< "${cmd[*]} $OS_DIR"; exit 1
+    else "${cmd[@]}" "$OS_DIR" || exit 1
+    fi
 
     if [ -n "$NOW" ]
     then git co "$NOW"
     fi
 }
 
-function drun() {
+function drun {
     ( set | grep ^HUBBLE_
       set -x
 
@@ -75,7 +73,12 @@ function drun() {
       then VA+=( --user "$AS_USER" )
       fi
 
-      ${JUST_ECHO:+echo} \
-          docker run "${VA[@]}" -ti --rm --name "$CONTAINER_NAME" "$IMAGE_NAME" "$@"
+      cmd=( docker run "${VA[@]}" -ti --rm --name "$CONTAINER_NAME" "$IMAGE_NAME" "$@" )
+      if [ -n "$JUST_ECHO" ]
+      then ifold <<< "${cmd[*]}"; exit 1
+      else "${cmd[@]}" || exit 1
+      fi
     )
+
+    return $?
 }

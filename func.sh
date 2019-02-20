@@ -1,18 +1,7 @@
 #!/bin/bash
 
-function join {
-    local IFS="$1"; shift
-    if [ $# = 0 ]; then
-        readarray -t T < <( cat )
-        set -- "${T[@]}"
-    fi
-    echo "$*"
+function ifold {
+    # split super long lines on spaces and indent following rows
+    local cmf=$(( COLUMNS - 3 ))
+    fold -w $cmf -s | sed -e '2,$s/^/  /'
 }
-
-function lsplit {
-    local IFS="$1"; shift
-    for i in "$@"
-    do tr "$IFS" '\n' <<< "$i"
-    done
-}
-

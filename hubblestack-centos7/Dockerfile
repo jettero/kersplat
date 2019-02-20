@@ -1,4 +1,4 @@
-ARG OSI=centos:latest
+ARG OSI=hubblestack/centos7:latest
 FROM $OSI
 WORKDIR /root
 ENV HOME=/root

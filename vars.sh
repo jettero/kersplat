@@ -9,6 +9,12 @@ DHUB_USER="${DHUB_USER:-$USER}"
 DHUB_NAME="$(basename "$TOP_DIR")"
 DHUB_REPO="$DHUB_USER/$DHUB_NAME"
 
+if [ -d "$1" ]; then
+    OSI="$(grep ^ARG "$1/Dockerfile" | awk '{print $2}' | cut -d= -f2)"
+    echo "read OSI=\"$OSI\" from $1/Dockerfile"
+    shift
+fi
+
 IV="$(git describe --always)"
 OSI="${OSI:-centos:latest}"
 if [[ "$OSI" =~ / ]]
