@@ -1,5 +1,7 @@
 #!/bin/bash
 
-# echo "kersplat .bashrc"
+echo ~/.bashrc
 
+# /etc/profile.d/kersplat.sh is already loaded at this point, but we still
+# re-fire it for the PS1 and some other things.
 source /etc/profile.d/kersplat.sh
