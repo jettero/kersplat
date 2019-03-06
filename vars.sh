@@ -1,12 +1,19 @@
 #!/bin/bash
 
-TOP_FILE="$(realpath "$0")"
-TOP_DIR="$(dirname "$TOP_FILE")"
+cd "$(dirname "$0")" || exit 1
+TOP_DIR="$(realpath -s "$(pwd)")"
+TOP_BASENAME="$(basename "$TOP_DIR")"
 
 source "$TOP_DIR/func.sh"
 
-DHUB_USER="${DHUB_USER:-$USER}"
-DHUB_NAME="$(basename "$TOP_DIR")"
+if [[ "$TOP_BASENAME" =~ ^[^-][^-]*-[^-][^-]*$ ]]; then
+    DHUB_NAME="${DHUB_NAME:-$(cut -d- -f2 <<< "$TOP_BASENAME")}"
+    DHUB_USER="${DHUB_USER:-$(cut -d- -f1 <<< "$TOP_BASENAME")}"
+else
+    DHUB_NAME="${DHUB_NAME:-$TOP_BASENAME}"
+    DHUB_USER="${DHUB_USER:-$USER}"
+fi
+
 DHUB_REPO="$DHUB_USER/$DHUB_NAME"
 
 if [ -d "$1" ]; then
@@ -24,7 +31,6 @@ fi
 tmp="${OSI##*/}"
 OSR="${tmp%%:*}"
 OSV="${tmp##*:}"
-#echo "WTF!! OSD=OSO=$OSO[[${OSO:+-}]]OSR=$OSR"
 OSD="$OSO${OSO:+-}$OSR"
 OS_DIR="$TOP_DIR/$OSD"
 
