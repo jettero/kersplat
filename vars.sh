@@ -24,7 +24,7 @@ fi
 tmp="${OSI##*/}"
 OSR="${tmp%%:*}"
 OSV="${tmp##*:}"
-echo "WTF!! OSD=OSO=$OSO[[${OSO:+-}]]OSR=$OSR"
+#echo "WTF!! OSD=OSO=$OSO[[${OSO:+-}]]OSR=$OSR"
 OSD="$OSO${OSO:+-}$OSR"
 OS_DIR="$TOP_DIR/$OSD"
 
