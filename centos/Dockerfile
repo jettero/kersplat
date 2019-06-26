@@ -13,7 +13,7 @@ RUN wget https://pkg.osquery.io/rpm/osquery-3.3.0-1.linux.x86_64.rpm \
  && rpm -i osquery-3.3.0-1.linux.x86_64.rpm \
  && yum clean all && rm -rf /var/cache/yum anaconda* osquery*.rpm
 
-ENV PY_V=2.7.14
+ENV PY_V=2.7.16
 ENV PYENV_INSTALLER_URL=https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer
 ENV PYENV_ROOT=/usr/local/pyenv
 ENV PATH=$PYENV_ROOT/bin:$PATH
@@ -22,7 +22,7 @@ RUN umask 022
 RUN curl -s -S -L "$PYENV_INSTALLER_URL" -o /usr/bin/pyenv-installer; chmod 0755 /usr/bin/pyenv-installer
 RUN /usr/bin/pyenv-installer
 RUN eval "$(pyenv init -)"; pyenv install $PY_V
-RUN eval "$(pyenv init -)"; pyenv local 2.7.16; pyenv shell 2.7.16
+RUN eval "$(pyenv init -)"; pyenv local $PY_V; pyenv shell $PY_V
 
 COPY kersplat.sh /etc/profile.d/kersplat.sh
 COPY requirements.txt requirements.txt
