@@ -3,10 +3,10 @@ FROM $OSI
 WORKDIR /root
 ENV HOME=/root
 
-RUN yum makecache fast && yum -y update && yum -y install \
-      git wget vim python-setuptools net-tools iproute strace \
-      gcc make zlib-devel bzip2 bzip2-devel readline-devel sqlite \
-      sqlite-devel openssl-devel xz xz-devel libffi-devel graphviz \
+RUN yum makecache fast && yum -y update && yum -y install git wget vim \
+        python-setuptools net-tools iproute strace gcc make zlib-devel bzip2 \
+        bzip2-devel readline-devel sqlite sqlite-devel openssl-devel xz \
+        xz-devel libffi-devel graphviz \
  && yum clean all && rm -rf /var/cache/yum anaconda*
 
 RUN wget https://pkg.osquery.io/rpm/osquery-3.3.0-1.linux.x86_64.rpm \
@@ -22,7 +22,7 @@ RUN umask 022
 RUN curl -s -S -L "$PYENV_INSTALLER_URL" -o /usr/bin/pyenv-installer; chmod 0755 /usr/bin/pyenv-installer
 RUN /usr/bin/pyenv-installer
 RUN eval "$(pyenv init -)"; pyenv install $PY_V
-RUN eval "$(pyenv init -)"; pyenv local 2.7.14; pyenv shell 2.7.14
+RUN eval "$(pyenv init -)"; pyenv local 2.7.16; pyenv shell 2.7.16
 
 COPY kersplat.sh /etc/profile.d/kersplat.sh
 COPY requirements.txt requirements.txt
