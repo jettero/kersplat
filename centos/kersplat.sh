@@ -9,5 +9,4 @@ alias ls='ls -h --color=tty'
 alias l='ls -sh'
 
 eval "$(pyenv init -)"
-# pyenv local $PY_V
-# pyenv shell $PY_V
+pyenv shell $PY_V
