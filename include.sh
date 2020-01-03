@@ -40,7 +40,7 @@ function dbuild {
     else unset NOW
     fi
 
-    cmd=( docker image build -t "$IMAGE_NAME" --build-arg "OSI=$OSI" )
+    cmd=( docker image build -t "$IMAGE_NAME" --build-arg "OSI=$OSI" --build-arg "PY_V=$PY_V" )
 
     if [ -n "$build_proxy" ]; then
         # NOTE: for custom ENV names, you have to define an ARG in the
