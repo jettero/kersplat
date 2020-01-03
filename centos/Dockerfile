@@ -3,7 +3,7 @@ FROM $OSI
 WORKDIR /root
 ENV HOME=/root
 
-RUN yum makecache fast && yum -y update && yum -y install git wget vim \
+RUN yum makecache && yum -y update && yum -y install git wget vim \
         python-setuptools net-tools iproute strace gcc make zlib-devel bzip2 \
         bzip2-devel readline-devel sqlite sqlite-devel openssl-devel xz \
         xz-devel libffi-devel graphviz \
