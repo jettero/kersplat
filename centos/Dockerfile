@@ -28,13 +28,14 @@ ENV PATH=$PYENV_ROOT/bin:$PATH
 RUN umask 022
 RUN curl -s -S -L "$PYENV_INSTALLER_URL" -o /usr/bin/pyenv-installer; chmod 0755 /usr/bin/pyenv-installer
 RUN /usr/bin/pyenv-installer
-COPY kersplat.sh /etc/profile.d/kersplat.sh
 COPY requirements.txt requirements.txt
-RUN source /etc/profile.d/kersplat.sh; pyenv install $PY_V
-RUN source /etc/profile.d/kersplat.sh; pyenv shell $PY_V; pip install --upgrade pip; rm -rf ~/.cache/pip
-RUN source /etc/profile.d/kersplat.sh; pyenv shell $PY_V; pip install --upgrade urllib3 requests; rm -rf ~/.cache/pip
-RUN source /etc/profile.d/kersplat.sh; pyenv shell $PY_V; pip install --upgrade -r requirements.txt; rm -rf ~/.cache/pip
-RUN source /etc/profile.d/kersplat.sh; pyenv shell $PY_V; pip install --upgrade pip-tools ipython; rm -rf ~/.cache/pip
+RUN eval $(pyenv init -); pyenv install $PY_V
+RUN eval $(pyenv init -); pyenv shell   $PY_V; pip install --upgrade pip                 && rm -rf ~/.cache/pip
+RUN eval $(pyenv init -); pyenv shell   $PY_V; pip install --upgrade urllib3 requests    && rm -rf ~/.cache/pip
+RUN eval $(pyenv init -); pyenv shell   $PY_V; pip install --upgrade -r requirements.txt && rm -rf ~/.cache/pip
+RUN eval $(pyenv init -); pyenv shell   $PY_V; pip install --upgrade pip-tools ipython   && rm -rf ~/.cache/pip
+
+COPY kersplat.sh /etc/profile.d/kersplat.sh
 
 RUN groupadd -fg 1000 kersplat; \
     useradd -os /bin/bash -d /work -m -g 1000 -u 1000 kersplat
