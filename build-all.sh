@@ -5,5 +5,5 @@ V=( 2.7.16
     3.8.1 )
 
 for i in "${V[@]}"
-do ./build.sh "$i"
+do PY_V=$i ./build.sh
 done
