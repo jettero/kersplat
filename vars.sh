@@ -22,7 +22,7 @@ if [ -d "$1" ]; then
     shift
 fi
 
-IV="$(git describe --always --long | sed -e 's/-[a-z0-9]*$//')"
+IV="$(git describe --always --long | sed -e 's/-[a-z0-9]*$//' -e 's/-0$//' )"
 OSI="${OSI:-centos:7}"
 if [[ "$OSI" =~ / ]]
 then OSO="${OSI%%/*}"
