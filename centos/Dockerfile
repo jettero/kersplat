@@ -58,11 +58,12 @@ COPY kersplat.sh /etc/profile.d/kersplat.sh
 RUN groupadd -fg 1000 kersplat; \
     useradd -os /bin/bash -d /work -m -g 1000 -u 1000 kersplat
 
-copy bashrc /root/.bashrc
-copy bashrc /work/.bashrc
+COPY bashrc /root/.bashrc
+COPY bashrc /work/.bashrc
 COPY docker-entrypoint.sh /
 
-RUN chown kersplat:kersplat -R $PYENV_ROOT /work; \
+RUN chown -cR root:root /root
+RUN chown kersplat:kersplat -cR $PYENV_ROOT /work; \
     chmod 0755 /docker-entrypoint.sh; \
     chmod 0644 /etc/profile.d/kersplat.sh
 
