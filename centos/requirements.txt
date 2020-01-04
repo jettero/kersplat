@@ -1,19 +1,21 @@
-
-############# test requirements ####################
-#
-argparse
+ntplib
+distro
+pyinstaller==3.3.1
 Crypto
-daemon
-logging
-pprint
-pyinotify
 pyopenssl>=16.2.0
-pytest
-pyyaml
+argparse
 requests>=2.13.0
+pprint
+daemon
+boto3
+botocore
+pygit2<0.27.0
 salt-ssh
-
-############# lint requirements ####################
-#
-pylint
-saltpylint
+gitpython
+pyinotify
+cffi
+azure
+azure-storage-common
+azure-storage-blob
+croniter
+vulners
