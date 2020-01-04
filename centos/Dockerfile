@@ -63,7 +63,7 @@ COPY bashrc /work/.bashrc
 COPY docker-entrypoint.sh /
 
 RUN chown -cR root:root /root
-RUN chown kersplat:kersplat -cR $PYENV_ROOT /work; \
+RUN chown kersplat:kersplat -cR /work; \
     chmod 0755 /docker-entrypoint.sh; \
     chmod 0644 /etc/profile.d/kersplat.sh
 
