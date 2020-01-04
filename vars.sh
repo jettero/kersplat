@@ -22,8 +22,8 @@ if [ -d "$1" ]; then
     shift
 fi
 
-IV="$(git describe --always)"
-OSI="${OSI:-centos:latest}"
+IV="$(git describe --always --long | sed -e 's/-[a-z0-9]*$//')"
+OSI="${OSI:-centos:7}"
 if [[ "$OSI" =~ / ]]
 then OSO="${OSI%%/*}"
 else OSO=""
@@ -33,9 +33,8 @@ OSR="${tmp%%:*}"
 OSV="${tmp##*:}"
 OSD="$OSO${OSO:+-}$OSR"
 OS_DIR="$TOP_DIR/$OSD"
-PY_V="${PY_V:-3.6.10}"
 
-IMAGE_TAG="$OSD-$IV-$PY_V"
+IMAGE_TAG="$OSD-$IV"
 IMAGE_NAME="$DHUB_REPO:$IMAGE_TAG"
 CONTAINER_NAME="$IMAGE_TAG"
 

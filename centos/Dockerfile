@@ -1,25 +1,24 @@
-ARG OSI=centos:latest
+ARG OSI=centos:7
 FROM $OSI
 WORKDIR /root
 ENV HOME=/root
 
-RUN yum makecache \
- && yum -y update \
- && yum -y install yum git wget vim \
- && yum -y install net-tools iproute \
- && yum -y install strace gcc make zlib-devel bzip2 \
- && yum -y install bzip2-devel readline-devel \
- && yum -y install sqlite sqlite-devel \
- && yum -y install openssl-devel xz xz-devel \
- && yum -y install libffi-devel graphviz \
+RUN yum -y install epel-release \
+ && yum -y install \
+     yum git wget vim \
+     net-tools iproute \
+     strace gcc make zlib-devel bzip2 \
+     bzip2-devel readline-devel \
+     sqlite sqlite-devel \
+     openssl-devel xz xz-devel \
+     libffi-devel graphviz \
+     libgit2 libgit2-devel \
  && yum clean all \
  && rm -rf /var/cache/yum anaconda*
 
 RUN wget https://pkg.osquery.io/rpm/osquery-3.3.0-1.linux.x86_64.rpm \
  && rpm -i osquery-3.3.0-1.linux.x86_64.rpm \
  && yum clean all && rm -rf /var/cache/yum anaconda* osquery*.rpm
-
-ARG PY_V=3.6.10
 
 ENV PYENV_INSTALLER_URL=https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer
 ENV PYENV_ROOT=/usr/local/pyenv
@@ -28,12 +27,31 @@ ENV PATH=$PYENV_ROOT/bin:$PATH
 RUN umask 022
 RUN curl -s -S -L "$PYENV_INSTALLER_URL" -o /usr/bin/pyenv-installer; chmod 0755 /usr/bin/pyenv-installer
 RUN /usr/bin/pyenv-installer
-COPY requirements.txt requirements.txt
+
+ARG PY_V=2.7.16
+
+RUN eval "$(pyenv init -)"; pyenv install 3.6.10
+RUN eval "$(pyenv init -)"; pyenv shell   3.6.10; pip install --upgrade pip && rm -rf ~/.cache/pip
+RUN eval "$(pyenv init -)"; pyenv shell   3.6.10; pip install --upgrade urllib3 requests pip-tools ipython && rm -rf ~/.cache/pip
+
 RUN eval "$(pyenv init -)"; pyenv install $PY_V
-RUN eval "$(pyenv init -)"; pyenv shell   $PY_V; pip install --upgrade pip                 && rm -rf ~/.cache/pip
-RUN eval "$(pyenv init -)"; pyenv shell   $PY_V; pip install --upgrade urllib3 requests    && rm -rf ~/.cache/pip
-RUN eval "$(pyenv init -)"; pyenv shell   $PY_V; pip install --upgrade -r requirements.txt && rm -rf ~/.cache/pip
-RUN eval "$(pyenv init -)"; pyenv shell   $PY_V; pip install --upgrade pip-tools ipython   && rm -rf ~/.cache/pip
+RUN eval "$(pyenv init -)"; pyenv shell   $PY_V; pip install --upgrade pip && rm -rf ~/.cache/pip
+RUN eval "$(pyenv init -)"; pyenv shell   $PY_V; pip install --upgrade urllib3 requests pip-tools ipython && rm -rf ~/.cache/pip
+
+# NOTE: can't do 3.8.1 until salt-ssh resolves their 'distro' package problem
+# in setup.py
+
+# RUN eval "$(pyenv init -)"; pyenv install 3.8.1
+# RUN eval "$(pyenv init -)"; pyenv shell   3.8.1; pip install --upgrade pip && rm -rf ~/.cache/pip
+# RUN eval "$(pyenv init -)"; pyenv shell   3.8.1; pip install --upgrade urllib3 requests pip-tools ipython && rm -rf ~/.cache/pip
+
+COPY requirements.txt requirements.txt
+
+RUN eval "$(pyenv init -)"; pyenv shell 3.6.10; pip install --upgrade -r requirements.txt && rm -rf ~/.cache/pip
+RUN eval "$(pyenv init -)"; pyenv shell $PY_V; pip install --upgrade -r requirements.txt && rm -rf ~/.cache/pip
+# RUN eval "$(pyenv init -)"; pyenv shell 3.8.1 ; pip install --upgrade -r requirements.txt && rm -rf ~/.cache/pip
+
+RUN eval "$(pyenv init -)"; pyenv global $PY_V
 
 COPY kersplat.sh /etc/profile.d/kersplat.sh
 
