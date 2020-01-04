@@ -51,7 +51,7 @@ RUN eval "$(pyenv init -)"; pyenv shell 3.6.10; pip install --upgrade -r require
 RUN eval "$(pyenv init -)"; pyenv shell $PY_V; pip install --upgrade -r requirements.txt && rm -rf ~/.cache/pip
 # RUN eval "$(pyenv init -)"; pyenv shell 3.8.1 ; pip install --upgrade -r requirements.txt && rm -rf ~/.cache/pip
 
-RUN eval "$(pyenv init -)"; pyenv global $PY_V
+RUN eval "$(pyenv init -)"; pyenv global $PY_V; echo $PY_V > /etc/PY_V; chmod 0644 /etc/PY_V
 
 COPY kersplat.sh /etc/profile.d/kersplat.sh
 
