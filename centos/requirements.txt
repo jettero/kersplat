@@ -20,7 +20,6 @@ gitpython
 gprof2dot
 idna
 jinja2
-logging
 markupsafe
 mock
 msgpack
@@ -31,7 +30,6 @@ pygit2<0.27.0
 pyinotify
 pyinstaller==3.3.1
 pylint
-pyOpenSSL
 pyopenssl>=16.2.0
 pytest
 pytest-cov
@@ -39,7 +37,6 @@ pytest-html
 pytest-pythonpath
 python-dateutil
 pyyaml
-requests
 requests>=2.13.0
 salt-ssh
 saltpylint
