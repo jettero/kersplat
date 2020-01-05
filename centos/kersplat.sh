@@ -9,6 +9,6 @@ export PS1="\u[\$(pyenv version-name)] \w\$ "
 alias ls='ls -h --color=tty'
 alias l='ls -sh'
 
-eval "$(pyenv init -)"
-pyenv shell $PY_V
 set -o vi
+
+eval "$(pyenv init -)"
