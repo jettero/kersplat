@@ -32,10 +32,6 @@ RUN eval "$(pyenv init -)"; pyenv install 3.6.10
 RUN eval "$(pyenv init -)"; pyenv shell   3.6.10; pip install --upgrade pip && rm -rf ~/.cache/pip
 RUN eval "$(pyenv init -)"; pyenv shell   3.6.10; pip install --upgrade urllib3 requests pip-tools ipython && rm -rf ~/.cache/pip
 
-RUN eval "$(pyenv init -)"; pyenv install 2.7.16
-RUN eval "$(pyenv init -)"; pyenv shell   2.7.16; pip install --upgrade pip && rm -rf ~/.cache/pip
-RUN eval "$(pyenv init -)"; pyenv shell   2.7.16; pip install --upgrade urllib3 requests pip-tools ipython && rm -rf ~/.cache/pip
-
 # NOTE: can't do 3.8.1 until salt-ssh resolves their 'distro' package problem
 # in setup.py
 
@@ -46,10 +42,9 @@ RUN eval "$(pyenv init -)"; pyenv shell   2.7.16; pip install --upgrade urllib3 
 COPY requirements.txt requirements.txt
 
 RUN eval "$(pyenv init -)"; pyenv shell 3.6.10; pip install --upgrade -r requirements.txt && rm -rf ~/.cache/pip
-RUN eval "$(pyenv init -)"; pyenv shell 2.7.16; pip install --upgrade -r requirements.txt && rm -rf ~/.cache/pip
 # RUN eval "$(pyenv init -)"; pyenv shell 3.8.1 ; pip install --upgrade -r requirements.txt && rm -rf ~/.cache/pip
 
-RUN eval "$(pyenv init -)"; pyenv global 2.7.16; echo 2.7.16 > /etc/PY_V; chmod 0644 /etc/PY_V
+RUN eval "$(pyenv init -)"; pyenv global 3.6.10; echo 3.6.10 > /etc/PY_V; chmod 0644 /etc/PY_V
 
 COPY kersplat.sh /etc/profile.d/kersplat.sh
 
