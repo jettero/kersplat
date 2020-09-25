@@ -10,5 +10,3 @@ alias l='ls -sh'
 set -o vi
 
 eval "$(pyenv init -)"
-
-echo "/etc/profile.d/kersplat.sh PV_V=$(pyenv version-name)"
