@@ -4,8 +4,8 @@ source "$(dirname "$0")"/vars.sh
 source "$(dirname "$0")"/func.sh
 declare -A volume
 
-if [ ! -f "$OS_DIR/Dockerfile" ]
-then echo "no such file $OS_DIR/Dockerfile"; exit 1
+if [ ! -f "$OSD/Dockerfile" ]
+then echo "no such file $OSD/Dockerfile"; exit 1
 fi
 
 if [ -n "$TOP_DIR" -a -d "$TOP_DIR" ]
@@ -40,7 +40,7 @@ function dbuild {
     else unset NOW
     fi
 
-    cmd=( docker image build --force-rm -t "$IMAGE_NAME" --build-arg "OSI=$OSI" )
+    cmd=( docker image build --force-rm -t "$IMAGE_NAME" )
 
     if [ -n "$build_proxy" ]; then
         # NOTE: for custom ENV names, you have to define an ARG in the
@@ -51,8 +51,8 @@ function dbuild {
     fi
 
     if [ -n "$JUST_ECHO" ]
-    then ifold <<< "${cmd[*]} $OS_DIR"; exit 1
-    else "${cmd[@]}" "$OS_DIR" || exit 1
+    then ifold <<< "${cmd[*]} $OSD"; exit 1
+    else "${cmd[@]}" "$OSD" || exit 1
     fi
 
     if [ -n "$NOW" ]

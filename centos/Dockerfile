@@ -1,20 +1,23 @@
-ARG OSI=centos:7
-FROM $OSI
+FROM centos:8
 WORKDIR /root
-ENV HOME=/root
 
-RUN yum -y install epel-release \
- && yum -y install \
-     yum git wget vim \
-     net-tools iproute \
-     strace gcc make zlib-devel bzip2 \
-     bzip2-devel readline-devel \
-     sqlite sqlite-devel \
-     openssl-devel xz xz-devel \
-     libffi-devel graphviz \
-     libgit2 libgit2-devel \
- && yum clean all \
- && rm -rf /var/cache/yum anaconda*
+RUN dnf install -y dnf-plugins-core \
+ && dnf update -y \
+ && dnf clean all \
+ && rm -rf /var/cache/dnf
+
+RUN dnf config-manager --set-enabled powertools \
+ && dnf install -y \
+        git wget vim \
+        net-tools iproute \
+        strace gcc make zlib-devel bzip2 \
+        bzip2-devel readline-devel \
+        sqlite sqlite-devel \
+        openssl-devel xz xz-devel \
+        libffi-devel graphviz \
+        libgit2 libgit2-devel \
+ && dnf clean all \
+ && rm -rf /var/cache/dnf
 
 RUN wget https://pkg.osquery.io/rpm/osquery-3.3.0-1.linux.x86_64.rpm \
  && rpm -i osquery-3.3.0-1.linux.x86_64.rpm \
@@ -28,23 +31,14 @@ RUN umask 022
 RUN curl -s -S -L "$PYENV_INSTALLER_URL" -o /usr/bin/pyenv-installer; chmod 0755 /usr/bin/pyenv-installer
 RUN /usr/bin/pyenv-installer
 
-RUN eval "$(pyenv init -)"; pyenv install 3.6.10
-RUN eval "$(pyenv init -)"; pyenv shell   3.6.10; pip install --upgrade pip && rm -rf ~/.cache/pip
-RUN eval "$(pyenv init -)"; pyenv shell   3.6.10; pip install --upgrade urllib3 requests pip-tools ipython && rm -rf ~/.cache/pip
+ARG PY_INSTALL="2.7.15 3.6.10 3.7.9 3.8.7 3.9.1"
+ARG PY_V=3.7.9
 
-# NOTE: can't do 3.8.1 until salt-ssh resolves their 'distro' package problem
-# in setup.py
-
-# RUN eval "$(pyenv init -)"; pyenv install 3.8.1
-# RUN eval "$(pyenv init -)"; pyenv shell   3.8.1; pip install --upgrade pip && rm -rf ~/.cache/pip
-# RUN eval "$(pyenv init -)"; pyenv shell   3.8.1; pip install --upgrade urllib3 requests pip-tools ipython && rm -rf ~/.cache/pip
-
-COPY requirements.txt requirements.txt
-
-RUN eval "$(pyenv init -)"; pyenv shell 3.6.10; pip install --upgrade -r requirements.txt && rm -rf ~/.cache/pip
-# RUN eval "$(pyenv init -)"; pyenv shell 3.8.1 ; pip install --upgrade -r requirements.txt && rm -rf ~/.cache/pip
-
-RUN eval "$(pyenv init -)"; pyenv global 3.6.10; echo 3.6.10 > /etc/PY_V; chmod 0644 /etc/PY_V
+RUN eval "$(pyenv init -)" \
+  ; set -e \
+  ; for py_v in $PY_INSTALL; do pyenv install $py_v; rm -rf /tmp/python-build*; done \
+  ; pyenv global $PY_V \
+  ; echo $PY_V > /etc/PY_V; chmod 0644 /etc/PY_V
 
 COPY kersplat.sh /etc/profile.d/kersplat.sh
 
@@ -59,10 +53,11 @@ RUN chown -cR root:root /root
 RUN chown kersplat:kersplat -cR /work; \
     chown kersplat:kersplat -R /usr/local/pyenv; \
     chmod 0755 /docker-entrypoint.sh; \
-    chmod 0644 /etc/profile.d/kersplat.sh
+    chmod 0644 /etc/profile.d/kersplat.sh; \
+    chmod -cR o=g /usr/local/pyenv
 
 WORKDIR /work
-ENV HOME=/work
+ENV HOME=/work LC_ALL=C.UTF-8
 USER kersplat
 
 ENTRYPOINT [ "/docker-entrypoint.sh" ]

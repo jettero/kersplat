@@ -16,25 +16,14 @@ fi
 
 DHUB_REPO="$DHUB_USER/$DHUB_NAME"
 
-if [ -d "$1" ]; then
-    OSI="$(grep ^ARG "$1/Dockerfile" | awk '{print $2}' | cut -d= -f2)"
-    echo "read OSI=\"$OSI\" from $1/Dockerfile"
-    shift
-fi
-
 IV="$(git describe --always --long | sed -e 's/-[a-z0-9]*$//' -e 's/-0$//' )"
-OSI="${OSI:-centos:7}"
-if [[ "$OSI" =~ / ]]
-then OSO="${OSI%%/*}"
-else OSO=""
-fi
+OSI="centos:8"
 tmp="${OSI##*/}"
 OSR="${tmp%%:*}"
 OSV="${tmp##*:}"
-OSD="$OSO${OSO:+-}$OSR"
-OS_DIR="$TOP_DIR/$OSD"
+OSD="$TOP_DIR/$OSR"
 
-IMAGE_TAG="$OSD-$IV"
+IMAGE_TAG="$OSR-$IV"
 IMAGE_NAME="$DHUB_REPO:$IMAGE_TAG"
 CONTAINER_NAME="$IMAGE_TAG"
 
@@ -43,11 +32,10 @@ val_color=$'\e[1;35m'
 rst=$'\e[m'
 
 echo "${var_color}TOP_DIR:        ${val_color}${TOP_DIR}${rst}"
-echo "${var_color}OSI:            ${val_color}${OSI}${rst}"
-echo "${var_color}OSO:            ${val_color}${OSO}${rst}"
-echo "${var_color}OSR:            ${val_color}${OSR}${rst}"
-echo "${var_color}OSV:            ${val_color}${OSV}${rst}"
-echo "${var_color}OSD:            ${val_color}${OSD}${rst}"
+echo "${var_color}OSI (dist:ver): ${val_color}${OSI}${rst}"
+echo "${var_color}OSR (dist):     ${val_color}${OSR}${rst}"
+echo "${var_color}OSV (version):  ${val_color}${OSV}${rst}"
+echo "${var_color}OSD (conf dir): ${val_color}${OSD}${rst}"
 echo "${var_color}DHUB_USER:      ${val_color}${DHUB_USER}${rst}"
 echo "${var_color}DHUB_NAME:      ${val_color}${DHUB_NAME}${rst}"
 echo "${var_color}DHUB_REPO:      ${val_color}${DHUB_REPO}${rst}"
