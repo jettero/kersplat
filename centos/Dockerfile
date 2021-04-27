@@ -27,11 +27,12 @@ ENV PYENV_INSTALLER_URL=https://raw.githubusercontent.com/pyenv/pyenv-installer/
 ENV PYENV_ROOT=/usr/local/pyenv
 ENV PATH=$PYENV_ROOT/bin:$PATH
 
+ARG PY_INSTALL="3.7.9 3.7.10 3.8.9 3.9.2 3.9.4"
+
 RUN umask 022
 RUN curl -s -S -L "$PYENV_INSTALLER_URL" -o /usr/bin/pyenv-installer; chmod 0755 /usr/bin/pyenv-installer
 RUN /usr/bin/pyenv-installer
 
-ARG PY_INSTALL="3.7.9 3.7.10 3.8.9 3.9.2 3.9.4"
 ARG PY_V=3.7.9
 
 RUN eval "$(pyenv init -)" \
