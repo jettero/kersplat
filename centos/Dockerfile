@@ -31,7 +31,7 @@ RUN umask 022
 RUN curl -s -S -L "$PYENV_INSTALLER_URL" -o /usr/bin/pyenv-installer; chmod 0755 /usr/bin/pyenv-installer
 RUN /usr/bin/pyenv-installer
 
-ARG PY_INSTALL="2.7.15 3.6.10 3.7.9 3.8.7 3.9.1"
+ARG PY_INSTALL="3.7.9 3.7.10 3.8.9 3.9.2 3.9.4"
 ARG PY_V=3.7.9
 
 RUN eval "$(pyenv init -)" \
