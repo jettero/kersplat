@@ -9,4 +9,4 @@ alias l='ls -sh'
 
 set -o vi
 
-eval "$(pyenv init -)"
+eval "$(pyenv init --path)"
