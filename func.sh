@@ -3,7 +3,9 @@
 function ifold {
     # split super long lines on spaces and indent following rows
     local cmf=$(( COLUMNS - 3 ))
+    echo
     fold -w $cmf -s | sed -e '2,$s/^/  /'
+    echo
 }
 
 function dcprune {
@@ -13,7 +15,7 @@ function dcprune {
 function diprune {
     docker image ls | grep "^$DHUB_REPO" \
         | awk '{print $2}' \
-        | grep -v "^$IMAGE_TAG" \
+        | grep -Ev "^(centos-v$IV|$IV)" \
         | grep -v '<none>' \
         | sort -u \
         | xargs -rn1 -I{} docker rmi "$DHUB_REPO:{}"
@@ -33,7 +35,11 @@ function dbuild {
     else unset NOW
     fi
 
-    cmd=( docker image build --force-rm -t "$IMAGE_NAME" )
+    cmd=( docker image build --force-rm )
+    if [ $BUILD_TYPE = buildx ]
+    then cmd+=( --load )
+    fi
+    cmd+=( -t "$IMAGE_NAME" -f "./$OSD" . )
 
   # if [ -n "$build_proxy" ]; then
   #     # NOTE: for custom ENV names, you have to define an ARG in the
@@ -43,9 +49,10 @@ function dbuild {
   #     cmd+=( --build-arg "https_proxy=http://$build_proxy/" )
   # fi
 
-    if [ -n "$JUST_ECHO" ]
-    then ifold <<< "${cmd[*]} $OSD"; exit 1
-    else "${cmd[@]}" "$OSD" || exit 1
+    ifold <<< "${cmd[*]}"
+
+    if [ -z "$JUST_ECHO" ]
+    then "${cmd[@]}" || exit 1
     fi
 
     if [ -n "$NOW" ]
@@ -67,9 +74,7 @@ function drun {
 
       cmd=( docker run "${VA[@]}" -ti --rm --name "$CONTAINER_NAME" "$IMAGE_NAME" "$@" )
 
-      echo
       ifold <<< "${cmd[*]}"
-      echo
 
       if [ -z "$JUST_ECHO" ]
       then "${cmd[@]}" || exit 1

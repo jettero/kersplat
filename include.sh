@@ -5,8 +5,8 @@ source "$(dirname "$0")"/func.sh
 
 declare -A volume
 
-if [ ! -f "$OSD/Dockerfile" ]
-then echo "no such file $OSD/Dockerfile"; exit 1
+if [ ! -f "./$OSD" ]
+then echo "no such file ./$OSD"; exit 1
 fi
 
 if [ -n "$TOP_DIR" -a -d "$TOP_DIR" ]
