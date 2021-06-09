@@ -54,7 +54,6 @@ RUN chown kersplat:kersplat -cR /work; \
 
 WORKDIR /work
 ENV HOME=/work LC_ALL=C.UTF-8
-USER kersplat
 
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
 CMD [ "bash", "-o", "vi" ]
