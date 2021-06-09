@@ -37,17 +37,11 @@ RUN umask 0022 \
   ; echo $PY_V > /etc/PY_V; chmod 0644 /etc/PY_V
 
 COPY misc/kersplat.sh /etc/profile.d/kersplat.sh
-
-RUN groupadd -fg 1000 kersplat; \
-    useradd -os /bin/bash -d /work -m -g 1000 -u 1000 kersplat
-
 COPY misc/bashrc /root/.bashrc
 COPY misc/bashrc /work/.bashrc
 COPY misc/docker-entrypoint.sh /
 
 RUN chown -cR root:root /root
-RUN chown kersplat:kersplat -cR /work; \
-    chown kersplat:kersplat -R /usr/local/pyenv; \
     chmod 0755 /docker-entrypoint.sh; \
     chmod 0644 /etc/profile.d/kersplat.sh; \
     chmod -cR o=g /usr/local/pyenv
