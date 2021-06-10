@@ -41,10 +41,10 @@ COPY misc/bashrc /root/.bashrc
 COPY misc/bashrc /work/.bashrc
 COPY misc/docker-entrypoint.sh /
 
-RUN chown -cR root:root /root
-    chmod 0755 /docker-entrypoint.sh; \
-    chmod 0644 /etc/profile.d/kersplat.sh; \
-    chmod -cR o=g /usr/local/pyenv
+RUN chown -cR root:root /root \
+  ; chmod 0755 /docker-entrypoint.sh \
+  ; chmod 0644 /etc/profile.d/kersplat.sh \
+  ; chmod -cR o=g /usr/local/pyenv
 
 WORKDIR /work
 ENV HOME=/work LC_ALL=C.UTF-8
