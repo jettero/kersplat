@@ -39,6 +39,10 @@ RUN umask 0022 \
   ; pyenv global $PY_V \
   ; echo $PY_V > /etc/PY_V; chmod 0644 /etc/PY_V
 
+RUN find /usr/local/pyenv -type f -name libpython\*.so | xargs -rn1 dirname | sort -hu | tee /etc/ld.so.conf.d/pyenv.conf \
+  ; chmod 0644 /etc/ld.so.conf.d/pyenv.conf \
+  ; ldconfig -v
+
 COPY misc/kersplat.sh /etc/profile.d/kersplat.sh
 COPY misc/bashrc /root/.bashrc
 COPY misc/bashrc /work/.bashrc
