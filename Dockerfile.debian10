@@ -30,6 +30,8 @@ RUN umask 0022 ; curl -sSL "$PYENV_INSTALLER_URL" | bash
 ARG PY_INSTALL="3.9.9"
 ARG PY_V=3.9.9
 
+ENV CONFIGURE_OPTS=--enable-shared
+
 RUN umask 0022 \
   ; eval "$(pyenv init --path)" \
   ; set -e \
