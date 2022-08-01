@@ -17,7 +17,7 @@ fi
 DHUB_REPO="$DHUB_USER/$DHUB_NAME"
 
 IV="$(git describe --always --long | sed -e 's/-[a-z0-9]*$//' -e 's/-0$//' | sed -e s/^v//)"
-OSI="${OSI:-debian:10}"
+OSI="${OSI:-ubuntu:16.04}"
 tmp="${OSI##*/}"
 OSR="${tmp%%:*}"
 OSV="${tmp##*:}"
